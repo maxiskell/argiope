@@ -53,7 +53,6 @@ class Argiope {
           }
         }
       }
-      console.log(this.sitemap);
     }, 1000 / this.speed);
   }
 
