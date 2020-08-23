@@ -32,7 +32,7 @@ describe("Scraper", () => {
 
   describe("extractRelativeLinks", () => {
     describe("Given the document contains external, relative and absolute links", () => {
-      it("Should contain only local absolute links", () => {
+      it("Should contain only local absolute links without hashes or query strings", () => {
         scraper.setDocument(`
           <html>
             <head>
@@ -43,7 +43,9 @@ describe("Scraper", () => {
               <nav>
                 <a href="https://example.com/posts">Posts</a>
                 <a href="/videos">Videos</a>
+                <a href="/photos#latest">Latest Photos</a>
                 <a href="https://fb.com/e-x-ample">Our FB Page</a>
+                <a href="/login?ref=home">Log In</a>
               </nav>
             </body>
           </html>
@@ -52,8 +54,13 @@ describe("Scraper", () => {
         const links = scraper.extractRelativeLinks("https://example.com");
 
         expect(links.has("https://fb.com/e-x-ample")).toBe(false);
+        expect(links.has("https://example.com/photos#latest")).toBe(false);
+        expect(links.has("https://example.com/login?ref=home")).toBe(false);
+
         expect(links.has("https://example.com/posts")).toBe(true);
         expect(links.has("https://example.com/videos")).toBe(true);
+        expect(links.has("https://example.com/photos")).toBe(true);
+        expect(links.has("https://example.com/login")).toBe(true);
       });
     });
   });

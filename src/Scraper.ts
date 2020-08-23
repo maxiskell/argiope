@@ -26,7 +26,7 @@ class Scraper {
     };
 
     this.document("a")
-      .slice(0, 5)
+      .slice(0, 20)
       .each((_, link) => {
         const attr = link.attribs;
 
@@ -35,7 +35,12 @@ class Scraper {
           !links.has(attr.href) &&
           isRelative(baseUrl, attr.href)
         )
-          links.add(new URL(attr.href, baseUrl).toString());
+          links.add(
+            new URL(
+              attr.href.split("?").shift().split("#").shift(),
+              baseUrl
+            ).toString()
+          );
       });
 
     return links as Set<string>;
