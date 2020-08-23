@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "esModuleInterop": true
+    "target": "ESNext",
+    "module": "CommonJS",
+    "rootDir": "./",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "experimentalDecorators": true
   }
 }

@@ -1,11 +1,7 @@
-import Argiope from "./Argiope";
+import App from "./app";
 
-if (!process.argv[2]) {
-  console.log("Please, specify a start url for the crawler");
-} else {
-  const url = process.argv[2];
-  const crawlsPerSecond = parseInt(process.argv[3]) || 1;
-  const maxCrawl = parseInt(process.argv[4]) || 1;
-  const crawler = new Argiope(url, crawlsPerSecond, maxCrawl);
-  crawler.start();
-}
+const port = process.env.PORT ? parseInt(process.env.PORT) : 3333;
+
+new App(port)
+  .start()
+  .then(() => console.log(`Local GraphQL Playground running on port ${port}`));

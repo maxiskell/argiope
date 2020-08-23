@@ -9,12 +9,17 @@
     "test": "jest --no-coverage"
   },
   "dependencies": {
+    "apollo-server": "^2.16.1",
     "cheerio": "^1.0.0-rc.3",
-    "got": "^11.5.2"
+    "got": "^11.5.2",
+    "graphql": "^15.3.0",
+    "reflect-metadata": "^0.1.13",
+    "type-graphql": "^1.0.0"
   },
   "devDependencies": {
-    "@types/got": "^9.6.11",
     "@types/cheerio": "^0.22.21",
+    "@types/got": "^9.6.11",
+    "@types/graphql": "^14.5.0",
     "@types/jest": "^26.0.10",
     "@typescript-eslint/eslint-plugin": "^3.0.2",
     "eslint": "^7.0.0",
