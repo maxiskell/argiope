@@ -13,12 +13,14 @@ class Argiope {
   baseUrl: string;
   visited: Set<string>;
   sitemap: Map<string, SiteData>;
+  speed: number;
 
-  constructor(url: string) {
+  constructor(url: string, speed: number = 1) {
     this.baseUrl = url;
     this.visited = new Set();
     this.sitemap = new Map();
     this.scraper = new Scraper();
+    this.speed = speed;
   }
 
   async getData(url: string) {
@@ -37,19 +39,22 @@ class Argiope {
   }
 
   async crawl(url: string) {
-    const data: SiteData = await this.getData(url);
+    setTimeout(async () => {
+      const data: SiteData = await this.getData(url);
 
-    if (!data.error) {
-      this.sitemap.set(url, data);
+      if (!data.error) {
+        this.sitemap.set(url, data);
 
-      for (let link of data.links) {
-        if (!this.visited.has(link)) {
-          this.visited.add(link);
+        for (let link of data.links) {
+          if (!this.visited.has(link)) {
+            this.visited.add(link);
 
-          this.crawl(link);
+            this.crawl(link);
+          }
         }
       }
-    }
+      console.log(this.sitemap);
+    }, 1000 / this.speed);
   }
 
   start() {
