@@ -9,18 +9,18 @@ interface SiteData {
 }
 
 class Argiope {
-  scraper: Scraper;
+  speed: number;
   baseUrl: string;
+  scraper: Scraper;
   visited: Set<string>;
   sitemap: Map<string, SiteData>;
-  speed: number;
 
   constructor(url: string, speed: number = 1) {
+    this.speed = speed;
     this.baseUrl = url;
     this.visited = new Set();
     this.sitemap = new Map();
     this.scraper = new Scraper();
-    this.speed = speed;
   }
 
   async getData(url: string) {
