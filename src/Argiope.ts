@@ -11,13 +11,19 @@ interface SiteData {
 class Argiope {
   speed: number;
   baseUrl: string;
+  maxCrawls: number;
+  crawlCount: number;
+
   scraper: Scraper;
   visited: Set<string>;
   sitemap: Map<string, SiteData>;
 
-  constructor(url: string, speed: number = 1) {
+  constructor(url: string, speed: number = 1, maxCrawls: number = 1) {
     this.speed = speed;
     this.baseUrl = url;
+    this.crawlCount = 0;
+    this.maxCrawls = maxCrawls;
+
     this.visited = new Set();
     this.sitemap = new Map();
     this.scraper = new Scraper();
@@ -46,7 +52,8 @@ class Argiope {
         this.sitemap.set(url, data);
 
         for (let link of data.links) {
-          if (!this.visited.has(link)) {
+          if (!this.visited.has(link) && this.crawlCount < this.maxCrawls) {
+            this.crawlCount++;
             this.visited.add(link);
 
             this.crawl(link);

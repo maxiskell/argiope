@@ -5,6 +5,7 @@ if (!process.argv[2]) {
 } else {
   const url = process.argv[2];
   const crawlsPerSecond = parseInt(process.argv[3]) || 1;
-  const crawler = new Argiope(url, crawlsPerSecond);
+  const maxCrawl = parseInt(process.argv[4]) || 1;
+  const crawler = new Argiope(url, crawlsPerSecond, maxCrawl);
   crawler.start();
 }
