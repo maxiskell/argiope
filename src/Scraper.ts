@@ -25,23 +25,14 @@ class Scraper {
       }
     };
 
-    this.document("a")
-      .slice(0, 20)
-      .each((_, link) => {
-        const attr = link.attribs;
+    this.document("a").each((_, link) => {
+      const attr = link.attribs;
 
-        if (
-          attr.href &&
-          !links.has(attr.href) &&
-          isRelative(baseUrl, attr.href)
-        )
-          links.add(
-            new URL(
-              attr.href.split("?").shift().split("#").shift(),
-              baseUrl
-            ).toString()
-          );
-      });
+      if (attr.href && !links.has(attr.href) && isRelative(baseUrl, attr.href))
+        links.add(
+          new URL(attr.href.split(/[?#]/i).shift(), baseUrl).toString()
+        );
+    });
 
     return links as Set<string>;
   }
