@@ -16,9 +16,11 @@ class Argiope extends EventEmitter {
 
   maxCrawls: number;
   crawlCount: number;
+  crawledUrls: number;
 
   scraper: Scraper;
   visited: Set<string>;
+  crawlingUrls: Set<string>;
   sitemap: Map<string, SiteData>;
 
   constructor(url: string, speed: number = 1, maxCrawls: number = 1) {
@@ -26,10 +28,12 @@ class Argiope extends EventEmitter {
     this.speed = speed;
     this.baseUrl = url;
     this.crawlCount = 0;
+    this.crawledUrls = 0;
     this.maxCrawls = maxCrawls;
 
     this.visited = new Set();
     this.sitemap = new Map();
+    this.crawlingUrls = new Set();
     this.scraper = new Scraper();
   }
 
@@ -50,7 +54,7 @@ class Argiope extends EventEmitter {
 
   async crawl(url: string) {
     setTimeout(async () => {
-      this.currentUrl = url;
+      this.crawlingUrls.add(url);
       this.emit("CRAWLING_URL", url);
 
       const data: SiteData = await this.getData(url);
@@ -60,12 +64,16 @@ class Argiope extends EventEmitter {
 
         for (let link of data.links) {
           if (!this.visited.has(link) && this.crawlCount < this.maxCrawls) {
-            this.crawlCount++;
             this.visited.add(link);
+            this.crawlCount++;
 
             this.crawl(link);
           }
         }
+
+        this.crawlingUrls.delete(url);
+        this.crawledUrls++;
+        this.emit("CRAWLED_URL", url);
       }
     }, 1000 / this.speed);
   }

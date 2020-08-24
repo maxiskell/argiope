@@ -9,6 +9,7 @@ import {
 } from "type-graphql";
 
 import Argiope from "../Argiope";
+import Report from "./report";
 
 @Resolver(CrawlerResolver)
 class CrawlerResolver {
@@ -24,17 +25,26 @@ class CrawlerResolver {
     if (!this.spider) {
       this.spider = new Argiope(url, speed, maxCrawls);
       this.spider.start();
-      this.spider.on("CRAWLING_URL", async (url) => {
-        await pubSub.publish("CRAWLING_URL", url);
-      });
+
+      this.spider.on(
+        "CRAWLING_URL",
+        async () => await pubSub.publish("CRAWLING_URL", url)
+      );
+      this.spider.on(
+        "CRAWLED_URL",
+        async () => await pubSub.publish("CRAWLED_URL", url)
+      );
     }
 
     return `Crawling ${url}`;
   }
 
-  @Subscription(() => String, { topics: "CRAWLING_URL" })
-  currentUrl(@Root() siteName: string): string {
-    return siteName;
+  @Subscription(() => Report, { topics: ["CRAWLING_URL", "CRAWLED_URL"] })
+  crawlerReport(@Root() _url: string): Report {
+    return {
+      crawled: this.spider.crawledUrls,
+      crawling: this.spider.crawlingUrls,
+    };
   }
 }
 
