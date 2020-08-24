@@ -1,3 +1,4 @@
+import { EventEmitter } from "events";
 import got from "got";
 
 import Scraper from "./Scraper";
@@ -8,9 +9,11 @@ interface SiteData {
   links?: Set<string>;
 }
 
-class Argiope {
+class Argiope extends EventEmitter {
   speed: number;
   baseUrl: string;
+  currentUrl: string;
+
   maxCrawls: number;
   crawlCount: number;
 
@@ -19,6 +22,7 @@ class Argiope {
   sitemap: Map<string, SiteData>;
 
   constructor(url: string, speed: number = 1, maxCrawls: number = 1) {
+    super();
     this.speed = speed;
     this.baseUrl = url;
     this.crawlCount = 0;
@@ -46,6 +50,9 @@ class Argiope {
 
   async crawl(url: string) {
     setTimeout(async () => {
+      this.currentUrl = url;
+      this.emit("CRAWLING_URL", url);
+
       const data: SiteData = await this.getData(url);
 
       if (!data.error) {
