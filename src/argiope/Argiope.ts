@@ -3,7 +3,7 @@ import got from "got";
 
 import Scraper from "./Scraper";
 
-interface SiteData {
+export interface ISiteData {
   title?: string;
   error?: boolean;
   links?: Set<string>;
@@ -20,7 +20,7 @@ class Argiope extends EventEmitter {
   scraper: Scraper;
   visited: Set<string>;
   crawlingUrls: Set<string>;
-  sitemap: Map<string, SiteData>;
+  sitemap: Map<string, ISiteData>;
 
   constructor(url: string, speed: number = 1, maxCrawls: number = 1) {
     super();
@@ -35,7 +35,12 @@ class Argiope extends EventEmitter {
     this.scraper = new Scraper();
   }
 
-  async getData(url: string) {
+  /**
+   * Visit a given URL an scrapes its title and relative links.
+   *
+   * @param url
+   */
+  async getData(url: string): Promise<ISiteData> {
     try {
       const { body } = await got(url);
 
@@ -50,12 +55,18 @@ class Argiope extends EventEmitter {
     }
   }
 
+  /**
+   * Recursively crawl a given URL
+   * as long as the crawling limit has not been exceeded.
+   *
+   * @param url string
+   */
   async crawl(url: string) {
     setTimeout(async () => {
       this.crawlingUrls.add(url);
       this.emit("CRAWLING_URL", url);
 
-      const data: SiteData = await this.getData(url);
+      const data: ISiteData = await this.getData(url);
 
       if (!data.error) {
         this.sitemap.set(url, data);
@@ -75,6 +86,9 @@ class Argiope extends EventEmitter {
     }, 1000 / this.speed);
   }
 
+  /**
+   * Start the crawler.
+   */
   start() {
     this.crawl(this.baseUrl);
   }

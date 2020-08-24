@@ -31,15 +31,15 @@ class CrawlerResolver {
 
       this.spider.on(
         "CRAWLING_URL",
-        async () => await pubSub.publish("CRAWLING_URL", url)
+        async (url) => await pubSub.publish("CRAWLING_URL", url)
       );
       this.spider.on(
         "CRAWLED_URL",
-        async (links) => await pubSub.publish("CRAWLED_URL", url)
+        async (url) => await pubSub.publish("CRAWLED_URL", url)
       );
     }
 
-    return `Crawling ${url}`;
+    return `Crawling ${url} at ${speed} crawls per second (max: ${maxCrawls} crawls)`;
   }
 
   @Subscription(() => Report, { topics: ["CRAWLING_URL", "CRAWLED_URL"] })
