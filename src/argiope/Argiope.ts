@@ -15,7 +15,6 @@ class Argiope extends EventEmitter {
   currentUrl: string;
 
   maxCrawls: number;
-  crawlCount: number;
   crawledUrls: number;
 
   scraper: Scraper;
@@ -27,7 +26,6 @@ class Argiope extends EventEmitter {
     super();
     this.speed = speed;
     this.baseUrl = url;
-    this.crawlCount = 0;
     this.crawledUrls = 0;
     this.maxCrawls = maxCrawls;
 
@@ -63,9 +61,8 @@ class Argiope extends EventEmitter {
         this.sitemap.set(url, data);
 
         for (let link of data.links) {
-          if (!this.visited.has(link) && this.crawlCount < this.maxCrawls) {
+          if (!this.visited.has(link) && this.visited.size < this.maxCrawls) {
             this.visited.add(link);
-            this.crawlCount++;
 
             this.crawl(link);
           }
