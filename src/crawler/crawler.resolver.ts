@@ -6,10 +6,13 @@ import {
   Root,
   PubSub,
   PubSubEngine,
+  Query,
 } from "type-graphql";
 
 import Argiope from "../Argiope";
 import Report from "./report";
+import Crawl from "./crawl";
+import SiteMap from "./sitemap";
 
 @Resolver(CrawlerResolver)
 class CrawlerResolver {
@@ -32,7 +35,7 @@ class CrawlerResolver {
       );
       this.spider.on(
         "CRAWLED_URL",
-        async () => await pubSub.publish("CRAWLED_URL", url)
+        async (links) => await pubSub.publish("CRAWLED_URL", url)
       );
     }
 
@@ -44,6 +47,28 @@ class CrawlerResolver {
     return {
       crawled: this.spider.crawledUrls,
       crawling: this.spider.crawlingUrls,
+    };
+  }
+
+  @Query(() => Crawl)
+  sitemap(): Crawl {
+    if (!this.spider) {
+      return { baseUrl: "" };
+    }
+
+    const sitemaps = new Set() as Set<SiteMap>;
+
+    for (let [url, { title, links }] of this.spider.sitemap) {
+      sitemaps.add({
+        url,
+        title,
+        links,
+      });
+    }
+
+    return {
+      baseUrl: this.spider.baseUrl,
+      sitemaps,
     };
   }
 }
