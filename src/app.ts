@@ -6,10 +6,11 @@ import { GraphQLSchema } from "graphql";
 import { buildSchema } from "type-graphql";
 import { ApolloServer, ServerInfo } from "apollo-server";
 
+import CrawlerResolver from "./crawler/crawler.resolver";
 import VersionResolver from "./versioning/version.resolver";
 
 class App {
-  resolvers: [Function, ...Function[]] = [VersionResolver];
+  resolvers: [Function, ...Function[]] = [CrawlerResolver, VersionResolver];
 
   constructor(readonly port: number) {}
 
