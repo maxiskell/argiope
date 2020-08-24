@@ -1,4 +1,6 @@
-import { VersionResolver } from "./version.resolver";
+import "reflect-metadata";
+
+import VersionResolver from "./version.resolver";
 
 it("resolves version", () => {
   const resolver = new VersionResolver();

@@ -1,4 +1,4 @@
-import Scraper from "../src/Scraper";
+import Scraper from "./Scraper";
 
 let scraper: Scraper;
 

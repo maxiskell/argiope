@@ -9,7 +9,7 @@ import {
   Query,
 } from "type-graphql";
 
-import Argiope from "../Argiope";
+import Argiope from "../argiope/Argiope";
 import Report from "./report";
 import Crawl from "./crawl";
 import SiteMap from "./sitemap";

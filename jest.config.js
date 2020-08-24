@@ -10,5 +10,5 @@ module.exports = {
   coverageReporters: ["html", "json", "text-summary"],
   preset: "ts-jest",
   testEnvironment: "node",
-  testMatch: ["<rootDir>/tests/*.test.ts"],
+  testMatch: ["<rootDir>/**/*.test.ts"],
 };
